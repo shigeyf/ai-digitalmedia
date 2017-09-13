@@ -1,4 +1,4 @@
----
+﻿---
 services: media-services,functions, comsmosdb, search
 platforms: dotnet, python
 author: shigeyf, yoichika
@@ -29,7 +29,7 @@ The demo session shall focus on:
 2. Fork https://github.com/shigeyf/ai-digitalmedia/ to your own repo
 3. Deploy Azure Functions  
 
-  <a href="" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
 
   * This deployment script will not create an Azure Media Services account and an Azure Storage account 
   * Please consider Consumption Plan or App Service Plan if you will deploy manually
