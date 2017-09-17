@@ -1,4 +1,5 @@
-﻿---
+
+---
 services: media-services,functions, comsmosdb, search
 platforms: dotnet, python
 author: shigeyf, yoichika
