@@ -1,4 +1,3 @@
-
 ---
 services: media-services,functions, comsmosdb, search
 platforms: dotnet, python
