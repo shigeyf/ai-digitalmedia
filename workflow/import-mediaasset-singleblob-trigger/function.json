@@ -1,0 +1,17 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "mediaimports/{name}.mp4",
+      "connection": "gbbdemostorage_STORAGE"
+    },
+    {
+      "type": "http",
+      "name": "res",
+      "direction": "out"
+    }
+  ],
+  "disabled": true
+}
