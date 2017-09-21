@@ -1,0 +1,21 @@
+{
+  "bindings": [
+    {
+      "name": "inputMessage",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "azsearch-feeding-queuetrigger-gbbdemofunc",
+      "connection": "gbbdemostorage_STORAGE"
+    },
+    {
+      "type": "documentDB",
+      "name": "inputDocument",
+      "databaseName": "asset",
+      "collectionName": "meta",
+      "sqlQuery": "SELECT * from c where c.id = {queueTrigger}",
+      "connection": "gbbdemodb_DOCUMENTDB",
+      "direction": "in"
+    }
+  ],
+  "disabled": false
+}
