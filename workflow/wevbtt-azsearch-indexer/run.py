@@ -94,6 +94,7 @@ def process_content_feeding(content_id, webvtt_url, index_name):
         AZURE_SEARCH_ADMIN_KEY,
         AZURE_SEARCH_API_VER)
 
+    webvtt_url = webvtt_url.replace(' ',"%20")
     f = urllib2.urlopen(webvtt_url)
     data = f.read().decode('utf-8')
     document_id = content_id[12:]
@@ -118,6 +119,7 @@ def process_caption_feeding(content_id, webvtt_url, index_name):
         AZURE_SEARCH_ADMIN_KEY,
         AZURE_SEARCH_API_VER)
 
+    webvtt_url = webvtt_url.replace(' ',"%20")
     f = urllib2.urlopen(webvtt_url)
     data = f.read().decode('utf-8')
     lines = data.split("\n")
@@ -224,4 +226,3 @@ functions_main()
 #    content_id = "nb:cid:UUID:66a56dd2-d65c-4f4e-9dbc-2208c9e00846"
 #    index_name = "caption-hi"
 #    process_caption_feeding(content_id, webvtt_url, index_name)
-
