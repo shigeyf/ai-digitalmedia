@@ -1,18 +1,20 @@
 ---
-services: media-services,functions, comsmosdb, search
+services: media-services, functions, comsmosdb, search
 platforms: dotnet, python
 author: shigeyf, yoichika
 ---
 
 # ai-digitalmedia
-AI powered digitial media library portal - A example web portal application on Microsoft Azure cloud platform.
 
-The demo session shall focus on:
+A sample demo application for AI powered digitial video library portal on Microsoft Azure cloud platform.
+
+This sample demo application shall focus on:
  * Transforming customer’s digital media assets on-prem into Azure
  * Driving media intelligence leveraged by Video AI
  * Online Video Portal (OVP) with indexing and search capability
 
-# Azure Workloads used in this demo:
+
+## What Azure Workloads are used in this sample demo application:
  - Hybrid Storage (StorSimple)
  - StorSimple Data Transformation Manager
  - Azure Media Services
@@ -23,13 +25,34 @@ The demo session shall focus on:
  - Azure Web App for Container
  - Cosmos DB
 
-# How to deply this sample
 
-1. Deploy Azure Media Services
-2. Fork https://github.com/shigeyf/ai-digitalmedia/ to your own repo
-3. Deploy Azure Functions  
+## How to deply this sample demo application
 
-  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
+### 1. Fork [this](https://github.com/shigeyf/ai-digitalmedia/) to your own repo
+
+### 2. Create an Azure Media Services account
+
+Create a Media Services account in your subscription if don't have it already.
+
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2FDeployAzureMediaServices%2Fmaster%2Fazuredeploy.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+
+### 3. Create a Service Principal
+
+Create a Service Principal and save the password. It will be needed in step 6. To do so, go to the API tab in the account ([follow this article](https://docs.microsoft.com/en-us/azure/media-services/media-services-portal-get-started-with-aad#service-principal-authentication))
+
+### 4. Make sure the AMS streaming endpoint is started
+
+To enable streaming, go to the Azure portal, select the Azure Media Services account which has been created, and start the default streaming endpoint.
+
+### 5. Create an Azure Search Service account
+
+
+
+### 6. Deploy sample media functions into an Azure Functions account
+
+Create a Function account with this sample code of media functions in your subscription.
+
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-functions.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
 
   * This deployment script will not create an Azure Media Services account and an Azure Storage account 
   * Please consider Consumption Plan or App Service Plan if you will deploy manually
@@ -37,6 +60,13 @@ The demo session shall focus on:
     * App Service Plan (Dedicated Plan) – There is no timeout (if AlwaysOn is enabled)
   * If a deployment target resource group already contains an App Service Plan (Dedicated Plan), Azure Functions app will be contained in that App Service Plan (Dedicated Plan)
 
-4. Deploy Azure Logic Apps
+### 7. Deploy sample media workflow into an Azure Logic App account
 
   <a href="" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
+
+
+
+## How to try this sample demo application
+
+TO BE DOCUMENTED
+
