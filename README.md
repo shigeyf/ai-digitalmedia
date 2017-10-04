@@ -38,7 +38,8 @@ Create a Media Services account in your subscription if don't have it already.
 
 ### 3. Create a Service Principal
 
-Create a Service Principal and save the password. It will be needed in step 6. To do so, go to the API tab in the account ([follow this article](https://docs.microsoft.com/en-us/azure/media-services/media-services-portal-get-started-with-aad#service-principal-authentication))
+Create a Service Principal and save the password. It will be needed in step 6.
+To do so, go to the API tab in the account ([follow this article](https://docs.microsoft.com/en-us/azure/media-services/media-services-portal-get-started-with-aad#service-principal-authentication))
 
 ### 4. Make sure the AMS streaming endpoint is started
 
@@ -62,7 +63,9 @@ Create a Function account with this sample code of media functions in your subsc
 
 ### 7. Deploy sample media workflow into an Azure Logic App account
 
-  <a href="" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
+Create a Logic App account with sample media workflow in your subscription.
+
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-logicapp-workflow.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
 
 
 

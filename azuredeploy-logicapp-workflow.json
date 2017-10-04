@@ -1,0 +1,292 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "logicAppName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "metadata": {
+                "description": "Name of Logic App for this sample workflow."
+            }
+        },
+        "functionsDeploymentResourceGroup": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "metadata": {
+                "description": "Name of deployment resource used by the functions."
+            }
+        },
+        "functionsDeploymentName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "metadata": {
+                "description": "Name of deployment of the functions."
+            }
+        },
+        "sourceAssetsStorageAccountName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure Storage Account Name for source assets."
+            }
+        },
+        "ingestMediaWatchContainer": {
+            "type": "string",
+            "defaultValue": "imports",
+            "metadata": {
+                "description": "Azure Storage Container Name to watch source media assets."
+            }
+        }
+    },
+    "variables": {
+        "logicAppLocation": "[resourceGroup().location]",
+        "sourceAssetsStorageAccountName": "[trim(parameters('sourceAssetsStorageAccountName'))]",
+        "sourceAssetsStorageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', trim(parameters('sourceAssetsStorageAccountName')))]",
+        "azureblob_1_Connection_Name": "azureblob-1-WatchFolder",
+        "azureblob_1_Connection_DisplayName": "azureblob-1-WatchFolder"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('logicAppName')]",
+            "location": "[variables('logicAppLocation')]",
+            "tags": {
+                "displayName": "LogicApp"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', variables('azureblob_1_Connection_Name'))]"
+            ],
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "outputs": {},
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "actions": {
+                        "create-empty-mediaasset": {
+                            "inputs": {
+                                "body": {
+                                    "FileName": "@{triggerBody()?['Path']}"
+                                },
+                                "function": {
+                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/create-empty-mediaasset')]"
+                                }
+                            },
+                            "runAfter": {},
+                            "type": "Function"
+                        },
+                        "import-mediaasset-singleblob": {
+                            "inputs": {
+                                "body": {
+                                    "DestinationContainer": "@{body('create-empty-mediaasset')['DestinationContainer']}",
+                                    "FileName": "@{triggerBody()?['Path']}"
+                                },
+                                "function": {
+                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/import-mediaasset-singleblob')]"
+                                }
+                            },
+                            "runAfter": {
+                                "create-empty-mediaasset": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Function"
+                        },
+                        "Until_CopyBlob_Done": {
+                            "actions": {
+                                "monitor-copy-blob": {
+                                    "inputs": {
+                                        "body": {
+                                            "DestinationContainer": "@{body('create-empty-mediaasset')['DestinationContainer']}"
+                                        },
+                                        "function": {
+                                            "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/monitor-copy-blob')]"
+                                        }
+                                    },
+                                    "runAfter": {},
+                                    "type": "Function"
+                                }
+                            },
+                            "expression": "@equals(body('monitor-copy-blob')['CopyStatus'], 2)",
+                            "limit": {
+                                "count": 1000,
+                                "timeout": "PT1H"
+                            },
+                            "runAfter": {
+                                "import-mediaasset-singleblob": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Until"
+                        },
+                        "add-file-to-mediaasset": {
+                            "inputs": {
+                                "body": {
+                                    "AssetId": "@{body('create-empty-mediaasset')['AssetId']}",
+                                    "CopyFileName": "@{body('import-mediaasset-singleblob')['CopyFileName']}"
+                                },
+                                "function": {
+                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/add-file-to-mediaasset')]"
+                                }
+                            },
+                            "runAfter": {
+                                "Until_CopyBlob_Done": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Function"
+                        },
+                        "submit-media-job": {
+                            "inputs": {
+                                "body": {
+                                    "AssetId": "@{body('create-empty-mediaasset')['AssetId']}",
+                                    "Tasks": [
+                                        "Media Encoder Standard",
+                                        "Azure Media Indexer 2 Preview"
+                                    ]
+                                },
+                                "function": {
+                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/submit-media-job')]"
+                                }
+                            },
+                            "runAfter": {
+                                "add-file-to-mediaasset": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Function"
+                        },
+                        "Until_MediaJob_Done": {
+                            "actions": {
+                                "monitor-media-job": {
+                                    "inputs": {
+                                        "body": {
+                                            "JobId": "@{body('submit-media-job')['JobId']}"
+                                        },
+                                        "function": {
+                                            "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/monitor-media-job')]"
+                                        }
+                                    },
+                                    "runAfter": {},
+                                    "type": "Function"
+                                }
+                            },
+                            "expression": "@greater(body('monitor-media-job')['JobState'], 2)",
+                            "limit": {
+                                "count": 1000,
+                                "timeout": "PT2H"
+                            },
+                            "runAfter": {
+                                "submit-media-job": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Until"
+                        },
+                        "translate-webvtt-mediaasset": {
+                            "inputs": {
+                                "body": {
+                                    "Azure Media Indexer 2 Preview": "@body('submit-media-job')['Azure Media Indexer 2 Preview']",
+                                    "SourceLanguage": "en",
+                                    "TranslatedLanguages": [
+                                        "ja",
+                                        "zh-Hans",
+                                        "hi"
+                                    ]
+                                },
+                                "function": {
+                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/translate-webvtt-mediaasset')]"
+                                }
+                            },
+                            "runAfter": {
+                                "Until_MediaJob_Done": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Function"
+                        },
+                        "publish-assets": {
+                            "inputs": {
+                                "body": {
+                                    "AssetIds": "@body('submit-media-job')['AssetIds']"
+                                },
+                                "function": {
+                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('functionsDeploymentResourceGroup'), '/providers/Microsoft.Web/sites/', parameters('functionsDeploymentName'), '/functions/publish-assets')]"
+                                }
+                            },
+                            "runAfter": {
+                                "translate-webvtt-mediaasset": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Function"
+                        }
+                    },
+                    "triggers": {
+                        "When_one_or_more_blobs_are_added_or_modified_(metadata_only)": {
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azureblob']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/datasets/default/triggers/batch/onupdatedfile",
+                                "queries": {
+                                    "folderId": "L2ltcG9ydHM=",
+                                    "maxFileCount": 10
+                                }
+                            },
+                            "metadata": {
+                                "L2ltcG9ydHM=": "[concat('/',parameters('ingestMediaWatchContainer'))]"
+                            },
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 1
+                            },
+                            "splitOn": "@triggerBody()",
+                            "type": "ApiConnection"
+                        }
+                    }
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "azureblob": {
+                                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', variables('logicAppLocation'), '/managedApis/', 'azureblob')]",
+                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('azureblob_1_Connection_Name'))]",
+                                "connectionName": "[variables('azureblob_1_Connection_Name')]"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[variables('azureblob_1_Connection_Name')]",
+            "location": "[variables('logicAppLocation')]",
+            "properties": {
+                "api": {
+                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', variables('logicAppLocation'), '/managedApis/', 'azureblob')]"
+                },
+                "displayName": "[variables('azureblob_1_Connection_DisplayName')]",
+                "parameterValues": {
+                    "accountName": "[variables('sourceAssetsStorageAccountName')]",
+                    "accessKey": "[listKeys(variables('sourceAssetsStorageAccountId'),'2015-05-01-preview').key1]"
+                }                
+            }
+        }
+    ],
+    "outputs": {}
+}
