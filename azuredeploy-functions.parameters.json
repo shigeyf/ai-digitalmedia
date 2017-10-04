@@ -2,7 +2,7 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
     "parameters": {
-        "appName": {
+        "functionsAppName": {
             "value": "GEN-UNIQUE"
         },
         "functionKey": {
@@ -16,6 +16,27 @@
         },
         "sourceCodeManualIntegration": {
             "value": true
+        },
+        "mediaServicesAccountAzureActiveDirectoryTenantDomain": {
+            "value": "ENTER YOUR TENANT DOMAIN, Example: microsoft.onmicrosoft.com"
+        },
+        "mediaServicesAccountRestApiEndpoint": {
+            "value": "Example: https://accountname.restv2.region.media.azure.net/api/"
+        },
+        "mediaServicesAccountServicePrincipalClientId": {
+            "value": ""
+        },
+        "mediaServicesAccountServicePrincipalClientSecret": {
+            "value": ""
+        },
+        "mediaServicesStorageAccountName": {
+            "value": ""
+        },
+        "searchServiceName": {
+            "value": ""
+        },
+        "searchServiceAdminKey": {
+            "value": ""
         }
     }
 }
