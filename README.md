@@ -26,9 +26,9 @@ This sample demo application shall focus on:
  - Cosmos DB
 
 
-## How to deply this sample demo application
+## How to deploy this sample demo application
 
-### 1. Fork [this](https://github.com/shigeyf/ai-digitalmedia/) to your own repo
+### 1. [Fork this](https://github.com/shigeyf/ai-digitalmedia#fork-destination-box) to your own repo
 
 ### 2. Create an Azure Media Services account
 
@@ -47,9 +47,13 @@ To enable streaming, go to the Azure portal, select the Azure Media Services acc
 
 ### 5. Create an Azure Search Service account
 
+TO BE DOCUMENTED
 
+### 6. Create an Azure COSMOS Database account
 
-### 6. Deploy sample media functions into an Azure Functions account
+TO BE DOCUMENTED
+
+### 7. Deploy sample media functions into an Azure Functions account
 
 Create a Function account with this sample code of media functions in your subscription.
 
@@ -61,12 +65,15 @@ Create a Function account with this sample code of media functions in your subsc
     * App Service Plan (Dedicated Plan) – There is no timeout (if AlwaysOn is enabled)
   * If a deployment target resource group already contains an App Service Plan (Dedicated Plan), Azure Functions app will be contained in that App Service Plan (Dedicated Plan)
 
-### 7. Deploy sample media workflow into an Azure Logic App account
+### 8. Deploy sample media workflow into an Azure Logic App account
 
 Create a Logic App account with sample media workflow in your subscription.
 
   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-logicapp-workflow.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
 
+### 9. Deploy sample web portal for digital media library 
+
+TO BE DOCUMENTED
 
 
 ## How to try this sample demo application
