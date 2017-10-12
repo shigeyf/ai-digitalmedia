@@ -1,14 +1,10 @@
 <?php
 require dirname(__FILE__) . '/api/azure-documentdb-php-sdk/vendor/autoload.php';
-$project_coonfig_file = dirname(__FILE__)."/project.json";
+require dirname(__FILE__) . '/config.inc';
 
-$json_s = file_get_contents($project_coonfig_file);
-$proejct_config = json_decode($json_s, true);
-
+$proejct_config = GET_CONFIG();
 $docdb_host=$proejct_config['docdb_host'];
 $docdb_master_key=$proejct_config['docdb_master_key'];
-$docdb_db_caption = $proejct_config['docdb_db_caption'];
-$docdb_coll_caption = $proejct_config['docdb_coll_caption'];
 $docdb_db_content = $proejct_config['docdb_db_content'];
 $docdb_coll_content = $proejct_config['docdb_coll_content'];
 

@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 COPY apache2.conf /bin/
 COPY init_container.sh /bin/
-COPY webapp /var/www/html/
+COPY . /var/www/html/
 
 RUN a2enmod rewrite expires include
 

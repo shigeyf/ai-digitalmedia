@@ -1,9 +1,8 @@
 <?php
 require dirname(__FILE__) . '/azure-documentdb-php-sdk/vendor/autoload.php';
-$project_coonfig_file = dirname(__FILE__)."/../project.json";
-$json_s = file_get_contents($project_coonfig_file);
-$proejct_config = json_decode($json_s, true);
+require dirname(__FILE__) . '/../config.inc';
 
+$proejct_config = GET_CONFIG();
 $azsearch_service_name=$proejct_config['azsearch_service_name'];
 $azsearch_api_key=$proejct_config['azsearch_api_key'];
 $azsearch_api_version = $proejct_config['azsearch_api_version'];
