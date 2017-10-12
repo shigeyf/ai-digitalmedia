@@ -73,7 +73,9 @@ Create a Logic App account with sample media workflow in your subscription.
 
 ### 9. Deploy sample web portal for digital media library 
 
-TO BE DOCUMENTED
+Create a Web App account with sample portal app code in your subscription.
+
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-portal.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 
 ## How to try this sample demo application
