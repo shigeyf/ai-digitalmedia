@@ -47,11 +47,15 @@ To enable streaming, go to the Azure portal, select the Azure Media Services acc
 
 ### 5. Create an Azure Search Service account
 
-TO BE DOCUMENTED
+Create a Azure Search accountin your subscription.
+
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-azuresearch.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a> 
 
 ### 6. Create an Azure COSMOS Database account
 
-TO BE DOCUMENTED
+Create a Cosmos DB accountin your subscription.
+  
+  <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-cosmosdb.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a> 
 
 ### 7. Deploy sample media functions into an Azure Functions account
 
