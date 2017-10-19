@@ -17,14 +17,14 @@
       "databaseName": "asset",
       "collectionName": "meta",
       "createIfNotExists": true,
-      "connection": "gbbdemodb_DOCUMENTDB",
+      "connection": "CosmosDB_Connection",
       "direction": "out"
     },
     {
       "type": "queue",
       "name": "outputQueueItem",
       "queueName": "azsearch-feeding-queuetrigger-gbbdemofunc",
-      "connection": "gbbdemostorage_STORAGE",
+      "connection": "IndexFeed_Storage",
       "direction": "out"
     }
   ],

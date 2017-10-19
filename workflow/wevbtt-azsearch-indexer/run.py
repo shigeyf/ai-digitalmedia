@@ -139,7 +139,9 @@ def process_caption_feeding(content_id, webvtt_url, index_name):
             begin_str=o[0][0]
             end_str= o[0][1]
         else:
-            print("WARNING: invalid time range line format: {}".format(line))
+            #print("WARNING: invalid time range line format: {}".format(line))
+            # Skip
+            line_index += 1
             continue
         ## text
         line_index += 1

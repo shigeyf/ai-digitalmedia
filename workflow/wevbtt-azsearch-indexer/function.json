@@ -5,7 +5,7 @@
       "type": "queueTrigger",
       "direction": "in",
       "queueName": "azsearch-feeding-queuetrigger-gbbdemofunc",
-      "connection": "gbbdemostorage_STORAGE"
+      "connection": "IndexFeed_Storage"
     },
     {
       "type": "documentDB",
@@ -13,7 +13,7 @@
       "databaseName": "asset",
       "collectionName": "meta",
       "sqlQuery": "SELECT * from c where c.id = {queueTrigger}",
-      "connection": "gbbdemodb_DOCUMENTDB",
+      "connection": "CosmosDB_Connection",
       "direction": "in"
     }
   ],
