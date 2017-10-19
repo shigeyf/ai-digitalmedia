@@ -131,7 +131,7 @@ def process_caption_feeding(content_id, webvtt_url, index_name):
 
     while line_index < len(lines):
         line = lines[line_index]
-        print ("line: {}".format(line))
+        print ("line: {}".format(line.encode('utf-8')))
         ## Extract xxx and yyy from either xxx.xxx -> yyy.yyy
         r = re.compile("([0-9:.]*) --> ([0-9:.]*)")
         o = r.findall(line)
@@ -139,8 +139,7 @@ def process_caption_feeding(content_id, webvtt_url, index_name):
             begin_str=o[0][0]
             end_str= o[0][1]
         else:
-            #print("WARNING: invalid time range line format: {}".format(line))
-            # Skip
+            # Skip until vaild time rage line comes up 
             line_index += 1
             continue
         ## text
