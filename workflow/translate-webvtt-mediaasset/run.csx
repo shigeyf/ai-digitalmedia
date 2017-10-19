@@ -182,6 +182,7 @@ static string Translate(string text, string fromLang, string toLang, string auth
 {
     if (text == "WEBVTT" || text == "") return text;
     if (System.Text.RegularExpressions.Regex.IsMatch(text, @"[0-9][0-9]:[0-9][0-9]:[0-9][0-9][.][0-9][0-9][0-9][ ]-->[ ][0-9][0-9]:[0-9][0-9]:[0-9][0-9][.][0-9][0-9][0-9]")) return text;
+    if (System.Text.RegularExpressions.Regex.IsMatch(text, @"NOTE[ ]Confidence[:]*")) return text;
 
     string translation;
     string uri = "https://api.microsofttranslator.com/v2/Http.svc/Translate?text=" + HttpUtility.UrlEncode(text) + "&from=" + fromLang + "&to=" + toLang;
