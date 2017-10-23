@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__) . '/azure-documentdb-php-sdk/vendor/autoload.php';
-require dirname(__FILE__) . '/../config.inc';
+require dirname(__FILE__) . '/../config.php';
 
 $proejct_config = GET_CONFIG();
 $azsearch_service_name=$proejct_config['azsearch_service_name'];

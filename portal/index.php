@@ -1,7 +1,7 @@
 <?php
 
 require dirname(__FILE__) . '/api/azure-documentdb-php-sdk/vendor/autoload.php';
-require dirname(__FILE__) . '/config.inc';
+require dirname(__FILE__) . '/config.php';
 
 $proejct_config = GET_CONFIG();
 $docdb_host=$proejct_config['docdb_host'];
@@ -15,11 +15,20 @@ $contentdb = new \DreamFactory\DocumentDb\Resources\Document($client, $docdb_db_
 $contentdb->setHeaders(['x-ms-max-item-count: 2000']);
 $res = $contentdb->getlist();
 $http_code = get_http_code($res);
-if ($http_code != 200 ){
-    print "ERROR: Loading Content!";
-    exit;
+$contents_arr = array();
+$service_init_need = false;
+
+switch ($http_code) {
+    case 200:
+        $contents_arr = $res['Documents'];
+        break;
+    case 404:
+        $service_init_need = true;
+        break;
+    default:
+        print "ERROR: Loading Content!";
+        exit;
 }
-$contents_arr = $res['Documents'];
 
 function get_http_code($res) {
     if( is_array($res) and array_key_exists('_curl_info', $res)) {
@@ -51,7 +60,7 @@ function array_has_value_of( $key, $arr) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
 
-    <title>GBB Demo</title>
+    <title>Azure Media & AI Demo</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -64,7 +73,7 @@ function array_has_value_of( $key, $arr) {
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="">GBB Demo CMS</a></li>
+            <li class="active"><a href="">Azure Media & AI Demo</a></li>
         </ul>
       </div>
     </nav>
@@ -75,37 +84,15 @@ function array_has_value_of( $key, $arr) {
     <div class="col-md-1" style="text-align:center"><img src='img/docker_logo.png' height=50><br><div style="width:30px"></div></div>
     <div class="col-md-1" style="text-align:center"><img src='img/azure_logo.png' height=50><br><div style="width:30px" ></div></div>
 </div>        
-<div class="row">
-    <div class="input-group" style="padding:20px;">
-        <input type="text" class="form-control" placeholder="Search for..." id="q"  onkeydown = "if (event.keyCode == 13) execTopSearch();" >
-        <span class="input-group-btn">
-        <button class="btn btn-default" type="button" onclick="execTopSearch();">Go!</button>
-        </span>
-    </div><!-- /input-group -->
-</div>        
-
-<div class="row">
-<div id="mediaContainer">
-<?php
-    $content_index = 1; 
-    foreach ($contents_arr as $content) {
-        $content_id = $content["id"];
-        if (!array_has_value_of("name", $content) && !array_has_value_of("asset_name", $content)) {
-            continue;
-        }
-        $name = (array_has_value_of("name", $content)) ? $content["name"] : $content["asset_name"];
-        $thumbnail_url = $content["thumbnail_url"];
-        $s = sprintf("<div class=\"col-md-4\" style=\"text-align:center\"><a href=\"video/%s\"><img src=\"%s\" height=200><br><div style=\"height:100px\"><b>%s</b></a></div></div>",
-                    $content_id,
-                    $thumbnail_url,
-                    $name);
-        echo $s;
-        $content_index++;
-    }
-?>
-</div><!-- //mediaContainer -->
-</div><!-- //row -->
-
+<?php 
+if ($service_init_need) {
+    include_once(dirname(__FILE__) . '/tmpl/init_button.php');
+}
+else {
+    include_once(dirname(__FILE__) . '/tmpl/content_search_form.php');
+    include_once(dirname(__FILE__) . '/tmpl/content_list.php');
+}
+?>    
 </div><!-- /.container -->
 
     <!-- Bootstrap core JavaScript

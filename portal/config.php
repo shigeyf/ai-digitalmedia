@@ -1,5 +1,4 @@
 <?php
-
 function GET_CONFIG() {
     $c = array();
     $c['docdb_host']= getenv('CosmosdbServiceHost');
@@ -12,6 +11,4 @@ function GET_CONFIG() {
     $c['azsearch_api_version'] = '2016-09-01';
     return $c;
 }
-
 ?>
-

@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__) . '/api/azure-documentdb-php-sdk/vendor/autoload.php';
-require dirname(__FILE__) . '/config.inc';
+require dirname(__FILE__) . '/config.php';
 
 $proejct_config = GET_CONFIG();
 $docdb_host=$proejct_config['docdb_host'];
@@ -80,7 +80,7 @@ function get_http_code($res) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
 
-    <title>GBB Demo Video Page</title>
+    <title>Azure Media & AI Demo</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">

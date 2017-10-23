@@ -1,10 +1,30 @@
 <?php
+require_once dirname(__FILE__) . '/azure-documentdb-php-sdk/vendor/autoload.php';
+require_once dirname(__FILE__) . '/../config.php';
 
-require_once dirname(__FILE__) . '/api/azure-documentdb-php-sdk/vendor/autoload.php';
-require_once dirname(__FILE__) . '/config.inc';
+$init_ret = init_services();
 
+if ($init_ret) {
+    set_api_response();
+} else {
+    set_api_error_response('UnknownError');
+}
 
-init_services();
+function set_api_response() {
+    $res_data =  "{ \"code\": \"OK\" }";
+    header('Content-Length: '.strlen($res_data));
+    header('Content-Type: application/json; odata.metadata=minimal');
+    header('Access-Control-Allow-Origin: *');
+    print $res_data;
+}
+
+function set_api_error_response($error_code) {
+    $res_data =  "{ \"code\": $error_code }";
+    header('Content-Length: '.strlen($res_data));
+    header('Content-Type: application/json; odata.metadata=minimal');
+    header('Access-Control-Allow-Origin: *');
+    print $res_data;
+}
 
 function init_services() {
     $c = GET_CONFIG();
@@ -20,12 +40,12 @@ function init_services() {
     $azsearch_api_version = $c['azsearch_api_version'];
 
     if (!init_cosmosdb($docdb_host, $docdb_master_key, $docdb_db_content, $docdb_coll_content)) {
-        print 'Error init_cosmosdb!\n';
+        //print 'Error init_cosmosdb!\n';
         return false;
     }
     if (!init_azuresearch($azsearch_service_name, $azsearch_api_key,
                  $azsearch_api_version, $azsearch_index_name_prefix)) {
-        print 'Error init_azuresearch!\n';
+        //print 'Error init_azuresearch!\n';
         return false;
     }
     return true;
@@ -60,7 +80,7 @@ function init_azuresearch($service_name, $api_key, $api_version, $index_name_pre
     // Get index list
     $index_names  = get_index_list($service_name, $api_key, $api_version);
     if (!is_array($index_names)) {
-        print 'Error init_azuresearch:: Get Index List!\n';
+        //print 'Error init_azuresearch:: Get Index List!\n';
         return false;
     }
     // Create an index for Content only if it doesn't exist
@@ -79,7 +99,7 @@ function init_azuresearch($service_name, $api_key, $api_version, $index_name_pre
     }
 }";
         if (!create_index_schema($service_name, $api_key, $api_version, $post_body))  {
-            print 'Error init_azuresearch:: Create Index Schema: content!\n';
+            //print 'Error init_azuresearch:: Create Index Schema: content!\n';
             return false;
         
         }
@@ -108,7 +128,7 @@ function init_azuresearch($service_name, $api_key, $api_version, $index_name_pre
 }";
 
             if (!create_index_schema($service_name, $api_key, $api_version, $post_body))  {
-                print "Error init_azuresearch:: Create Index Schema: $index_name!\n";
+                //print "Error init_azuresearch:: Create Index Schema: $index_name!\n";
                 return false;
             }
         }
@@ -163,13 +183,9 @@ function create_index_schema ($service_name, $api_key, $api_version, $post_body 
 
     $context = stream_context_create($opts);
     $data = file_get_contents($url, false, $context);
-    var_dump($data);
     if ($data  === false) {
         return null;
     } 
     return true;
 }
-
-
 ?>
-
