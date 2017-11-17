@@ -36,6 +36,11 @@ Create a Media Services account in your subscription if don't have it already.
 
   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2FDeployAzureMediaServices%2Fmaster%2Fazuredeploy.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
+  * Settings
+    - Media Services Account Name: specify any name
+    - Storage Account Name: specify any name
+    - Storage Option: *Starndard_LSR* is enough for this demo
+
 ### 3. Create a Service Principal
 
 Create a Service Principal and save the password. It will be needed in step 6.
@@ -51,11 +56,21 @@ Create a Azure Search accountin your subscription.
 
   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-azuresearch.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a> 
 
+  * Settings
+    - Name: specify any name
+    - Sku: *basic* is enough for this demo
+    - Replica Count: *1* is enough for this demo
+    - Partition Count: *1* is enough for this demo
+    - Hosting Mode: *default* is enough for this demo
+
 ### 6. Create an Azure COSMOS Database account
 
 Create a Cosmos DB accountin your subscription.
   
   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-cosmosdb.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a> 
+
+  * Settings
+    - Database Account Name: specify any name
 
 ### 7. Deploy sample media functions into an Azure Functions account
 
@@ -69,20 +84,58 @@ Create a Function account with this sample code of media functions in your subsc
     * App Service Plan (Dedicated Plan) – There is no timeout (if AlwaysOn is enabled)
   * If a deployment target resource group already contains an App Service Plan (Dedicated Plan), Azure Functions app will be contained in that App Service Plan (Dedicated Plan)
 
-### 8. Deploy sample media workflow into an Azure Logic App account
+  * Settings
+    - Function App Name: specify any name
+    - Function Key: Use as is
+    - Source Code Repository URL: Use your github repo
+    - Source Code Branch: Use your branch in your github repo
+    - Media Services Account Azure Active Directory Tenant Domain: specify your own Azure AD domain for AMS account access
+    - Media Services Account Rest Api Endpoint: specify your own AMS Api Endpoint (see Step 3)
+    - Media Services Account Service Principal Client Id: specify your own SPN for AMS access (see Step 3)
+    - Media Services Account Service Principal Client Secret: specify your own SPN for AMS access (see Step 3)
+    - Media Services Storage Account Name: specify your AMS storage account created at Step 2
+    - Cosmosdb Account Name: specify your COSMOS DB account name created at Step 6
+    - Cosmosdb Account Master Key: specify your COSMOS DB Read-write Primary (or Secondary) Key created at Step 6
+    - Search Service Name: specify your Azure Search account name created at Step 5
+    - Search Service Admin Key: specify your Azure Search primary (or secondary) account key created at Step 5
+
+### 8. Create blob container
+
+Create a container for importing media files in *mediaimportXXX* Azure Blob Storage account (*XXX* is random string).
+
+### 9. Deploy sample media workflow into an Azure Logic App account
 
 Create a Logic App account with sample media workflow in your subscription.
 
   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-logicapp-workflow.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>  
 
-### 9. Deploy sample web portal for digital media library 
+  * Settings
+    - Logic App Name: specify any name
+    - Function Deployment Resource Group: Specify Resource Group used in Step 7
+    - Function Deployment Name: Specify created Function App Name created in Step 7
+    - Source Asses Storage Account Name: Specify created Storage Account Name created in Step 7
+    - IngestMedia Watch Container: Specify container name created in Step 8
+
+### 10. Deploy sample web portal for digital media library 
 
 Create a Web App account with sample portal app code in your subscription.
 
   <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshigeyf%2Fai-digitalmedia%2Fmaster%2Fazuredeploy-portal.json" target="_blank"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
+  * Settings
+    - Site Name: specify web site name
+    - Hostting Plan Name: specify Linux App Service Plan Name
+    - Sku: specify Linux App Service Plan pricing tier
+    - Worker Size: *0* is enough for this demo
+    - Repo URL: Use your github repo
+    - Branch: Use your branch in your github repo
+    - Cosmosdb Service Host: specify your COSMOS DB URI created at Step 6
+    - Cosmosdb Master Key: specify your COSMOS DB Read-write Primary (or Secondary) Key created at Step 6
+    - Azure Search Service Name: specify your Azure Search account name created at Step 5
+    - Azure Search Api Key: specify your Azure Search primary (or secondary) account key created at Step 5
 
 ## How to try this sample demo application
 
-TO BE DOCUMENTED
-
+1. Open Web site http://*sitename*.azurewebsites.net/ (*) *sitename* is specified at Step 10.
+2. Click "Initialize" button in the web site.
+3. Upload video files into blob container specified at Step 8.
