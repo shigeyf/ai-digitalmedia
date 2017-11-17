@@ -1,5 +1,7 @@
 #r "Newtonsoft.Json"
+#r "Microsoft.WindowsAzure.MediaServices"
 #r "Microsoft.WindowsAzure.Storage"
+#r "Microsoft.IdentityModel.Clients.ActiveDirectory"
 
 using System;
 using System.Net;
