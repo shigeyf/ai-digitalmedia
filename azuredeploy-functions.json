@@ -71,34 +71,22 @@
         "description": "Cosmos DB Service Name"
       }
     },
-    "cosmosdbMasterKey": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "MasterKey for Cosmos DB Service"
-      }
-    },
     "searchServiceName": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "Azure Search Service Name"
       }
-    },
-    "searchServiceAdminKey": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Admin Key for Azure Search Service"
-      }
     }
   },
   "variables": {
     "project": "workflow",
-    "functionsAppName": "[concat(toLower(parameters('functionsAppName')),uniqueString(resourceGroup().id))]",
+    "functionsAppName": "[toLower(parameters('functionsAppName'))]",
     "storageAccountid": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-    "storageAccountName": "[concat('mediaimport',uniqueString(resourceGroup().id))]",
+    "storageAccountName": "[concat(toLower(parameters('functionsAppName')), uniqueString(resourceGroup().id))]",
     "mediaServicesStorageAccountid": "[resourceId('Microsoft.Storage/storageAccounts', parameters('mediaServicesStorageAccountName'))]",
+    "searchServicesId": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]",
+    "cosmosdbAccountid": "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosdbAccountName'))]",
     "hostingPlanName": "[concat(variables('functionsAppName'),'plan')]"
   },
   "resources": [
@@ -195,10 +183,10 @@
             "AMSStorageAccountName": "[parameters('mediaServicesStorageAccountName')]",
             "AMSStorageAccountKey": "[listKeys(variables('mediaServicesStorageAccountid'),'2015-05-01-preview').key1]",
             "StorageConnection": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]",
-            "CosmosDB_Connection": "[concat('AccountEndpoint=https://', parameters('cosmosdbAccountName'), '.documents.azure.com:443/;AccountKey=', parameters('cosmosdbMasterKey'))]",
-            "IndexFeed_Storage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('mediaServicesStorageAccountName'), ';AccountKey=',listKeys(variables('mediaServicesStorageAccountid'),'2015-05-01-preview').key1)]",
+            "CosmosDB_Connection": "[concat('AccountEndpoint=https://',parameters('cosmosdbAccountName'),'.documents.azure.com:443/;AccountKey=',listKeys(variables('cosmosdbAccountid'),'2015-04-08').primaryMasterKey)]",
+            "IndexFeed_Storage": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('mediaServicesStorageAccountName'),';AccountKey=',listKeys(variables('mediaServicesStorageAccountid'),'2015-05-01-preview').key1)]",
             "AzureSearchServiceName": "[parameters('searchServiceName')]",
-            "AzureSearchAdminKey": "[parameters('searchServiceAdminKey')]",
+            "AzureSearchAdminKey": "[listAdminKeys(variables('searchServicesId'),'2015-08-19').PrimaryKey]",
             "AzureSearchApiVer": "2016-09-01",
             "AzureSearchIndexPrefix": "caption",
             "SourceStorageAccountName": "[variables('storageAccountName')]",

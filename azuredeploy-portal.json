@@ -55,37 +55,26 @@
         "description": "The branch of the GitHub repository to use."
       }
     },
-    "CosmosdbServiceHost": {
+    "cosmosdbAccountName": {
       "type": "string",
-      "defaultValue": "https://mydb.documents.azure.com:443",
+      "defaultValue": "",
       "metadata": {
-        "description": "CosmosDB Service Host ex. https://mydb.documents.azure.com:443"
+        "description": "Cosmos DB Service Name"
       }
     },
-    "CosmosdbMasterKey": {
-      "type": "string",
-      "defaultValue": "xxxxxxxxxxxxxxxxxxxxxxx==",
-      "metadata": {
-        "description": "CosmosDB Master Key string"
-      }
-    },
-    "AzureSearchServiceName": {
+    "searchServiceName": {
       "type": "string",
       "defaultValue": "myazsearch",
       "metadata": {
         "description": "Azure Search Account Name"
       }
-    },
-    "AzureSearchApiKey": {
-      "type": "string",
-      "defaultValue": "xxxxxxxxxxxxxxxxxxxxxxxx",
-      "metadata": {
-        "description": "Azure Search Admin Key String"
-      }
     }
   },
   "variables": {
-    "project": "portal"
+    "project": "portal",
+    "searchServicesId": "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]",
+    "cosmosdbAccountid": "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosdbAccountName'))]",
+    "cosmosdbServiceHost": "[concat('https://', parameters('cosmosdbAccountName'), '.documents.azure.com:443')]"
   },
   "resources": [
     {
@@ -138,7 +127,7 @@
           "type": "sourcecontrols",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-             "[concat('Microsoft.Web/sites/', parameters('siteName'), '/config/web')]"
+            "[concat('Microsoft.Web/sites/', parameters('siteName'), '/config/web')]"
           ],
           "properties": {
             "RepoUrl": "[parameters('repoURL')]",
@@ -157,10 +146,10 @@
            ],
           "properties": {
              "Project": "[variables('project')]",
-             "CosmosdbServiceHost": "[parameters('CosmosdbServiceHost')]",
-             "CosmosdbMasterKey": "[parameters('CosmosdbMasterKey')]",
-             "AzureSearchServiceName": "[parameters('AzureSearchServiceName')]",
-             "AzureSearchApiKey": "[parameters('AzureSearchApiKey')]"
+             "CosmosdbServiceHost": "[variables('cosmosdbServiceHost')]",
+             "CosmosdbMasterKey": "[listKeys(variables('cosmosdbAccountid'),'2015-04-08').primaryMasterKey]",
+             "AzureSearchServiceName": "[parameters('SearchServiceName')]",
+             "AzureSearchApiKey": "[listAdminKeys(variables('searchServicesId'),'2015-08-19').PrimaryKey]"
            }
         }
       ]
