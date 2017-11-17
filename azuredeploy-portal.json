@@ -64,7 +64,7 @@
     },
     "searchServiceName": {
       "type": "string",
-      "defaultValue": "myazsearch",
+      "defaultValue": "",
       "metadata": {
         "description": "Azure Search Account Name"
       }
