@@ -95,9 +95,7 @@ Create a Function account with this sample code of media functions in your subsc
     - **Media Services Account Service Principal Client Secret**: specify your own SPN for AMS access (see Step 3)
     - **Media Services Storage Account Name**: specify your AMS storage account created at Step 2
     - **Cosmosdb Account Name**: specify your COSMOS DB account name created at Step 6
-    - **Cosmosdb Account Master Key**: specify your COSMOS DB Read-write Primary (or Secondary) Key created at Step 6
     - **Search Service Name**: specify your Azure Search account name created at Step 5
-    - **Search Service Admin Key**: specify your Azure Search primary (or secondary) account key created at Step 5
 
 ### 8. Create blob container
 
@@ -129,13 +127,12 @@ Create a Web App account with sample portal app code in your subscription.
     - **Worker Size**: *0* is enough for this demo
     - **Repo URL**: Use your github repo
     - **Branch**: Use your branch in your github repo
-    - **Cosmosdb Service Host**: specify your COSMOS DB URI created at Step 6
-    - **Cosmosdb Master Key**: specify your COSMOS DB Read-write Primary (or Secondary) Key created at Step 6
-    - **Azure Search Service Name**: specify your Azure Search account name created at Step 5
-    - **Azure Search Api Key**: specify your Azure Search primary (or secondary) account key created at Step 5
+    - **Cosmosdb Account Name**: specify your COSMOS DB account name created at Step 6
+    - **Search Service Name**: specify your Azure Search account name created at Step 5
 
 ## How to try this sample demo application
 
-1. Open Web site http://*sitename*.azurewebsites.net/ (*) *sitename* is specified at Step 10.
-2. Click "Initialize" button in the web site.
-3. Upload video files into blob container specified at Step 8.
+1. Open deployed web site http://*sitename*.azurewebsites.net/ (*) *sitename* is specified at Step 10.
+2. When opening the web site, the message "Action Required" will be shown, then click "Start Service" button in the web site.
+3. Click "Continue".
+4. Upload video files into blob container specified at Step 8.
